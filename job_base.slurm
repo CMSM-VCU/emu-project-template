@@ -8,7 +8,7 @@
 #SBATCH --partition=standard
 #SBATCH --mem=30gb
 
-#SBATCH --ntasks=4
+#SBATCH --ntasks=NPROCS
 #SBATCH --time=02:00:00
 
 echo $SLURM_JOB_NAME

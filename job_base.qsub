@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#$ -N TITLE
+#$ -cwd
+#$ -j y
+#$ -S /bin/bash
+#$ -pe par1 NPROCS
+
+echo $JOB_NAME
+echo $JOB_ID
+echo $NSLOTS
+
+# Set up output directory in home
+PROJECTDIR=/home/hallrc/real/projects/cf-pullout/
+
+JOBID=$(echo $JOB_ID | cut -d '.' -f 1)
+JOBDIR=${PROJECTDIR}${JOB_NAME}.${JOBID}
+
+echo $PROJECTDIR
+echo $JOBID
+echo $JOBDIR
+
+mkdir $JOBDIR
+
+# Copy files to working directory
+cd $JOBDIR
+
+cp -t . ${PROJECTDIR}base_folder/* -r
+cp -vt . ${PROJECTDIR}inputs/$JOB_NAME.in
+
+# Following section may not be necessary in the future!
+source /opt/intel/oneapi/setvars.sh
+
+
+# Run
+date
+mpirun -verbose -np $NSLOTS ./bin/emu ./$JOB_NAME.in
+date
+
+
+
+cd ./plotfiles
+rm ./emu.plt.*.$(expr $NSLOTS - 1)
+rm ./emu.plt.????1.*
+conda activate emu-h5
+python ../../../tools/emu_postprocessing/create_h5_from_plotfiles.py
+cp simulation.h5 ../$JOBID-$JOB_NAME.h5
+# cd ..
+# mkdir ../outputs/${JOB_NAME}.${JOBID}
+# cp -t ../outputs/${JOB_NAME}.${JOBID} ./$JOB_NAME.in ./emu.out.0.0 ./emu.his ./plotfiles/simulation.h5
+
+exit
