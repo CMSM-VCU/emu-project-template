@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=TITLE
 #SBATCH --output=%x-%j.out
-#SBATCH --account=guven
+#SBATCH --account=[ACCOUNT]
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=guven@email.arizona.edu
+#SBATCH --mail-user=[EMAIL ADDRESS]
 #SBATCH --partition=standard
 #SBATCH --mem=30gb
 
@@ -43,10 +43,11 @@ date
 mpirun -verbose -np $SLURM_NTASKS ./bin/emu ./$SLURM_JOB_NAME.in
 date
 
-cd ./plotfiles
-python ../../emu_to_h5.py
-cd ..
-mkdir ../outputs/${SLURM_JOB_NAME}.${JOBID}
-cp -t ../outputs/${SLURM_JOB_NAME}.${JOBID} ./$SLURM_JOB_NAME.in ./emu.out.0.0 ./emu.his ./plotfiles/simulation.h5
+# Example:
+# cd ./plotfiles
+# python ../../emu_to_h5.py
+# cd ..
+# mkdir ../outputs/${SLURM_JOB_NAME}.${JOBID}
+# cp -t ../outputs/${SLURM_JOB_NAME}.${JOBID} ./$SLURM_JOB_NAME.in ./emu.out.0.0 ./emu.his ./plotfiles/simulation.h5
 
 exit

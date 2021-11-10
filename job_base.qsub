@@ -11,7 +11,7 @@ echo $JOB_ID
 echo $NSLOTS
 
 # Set up output directory in home
-PROJECTDIR=/home/hallrc/real/projects/cf-pullout/
+PROJECTDIR=[REPLACE THIS WITH ABSOLUTE PATH TO PROJECT FOLDER]
 
 JOBID=$(echo $JOB_ID | cut -d '.' -f 1)
 JOBDIR=${PROJECTDIR}${JOB_NAME}.${JOBID}
@@ -37,14 +37,10 @@ date
 mpirun -verbose -np $NSLOTS ./bin/emu ./$JOB_NAME.in
 date
 
-
-
-cd ./plotfiles
-rm ./emu.plt.*.$(expr $NSLOTS - 1)
-rm ./emu.plt.????1.*
-conda activate emu-h5
-python ../../../tools/emu_postprocessing/create_h5_from_plotfiles.py
-cp simulation.h5 ../$JOBID-$JOB_NAME.h5
+# Example:
+# cd ./plotfiles
+# python ../../../tools/emu_postprocessing/create_h5_from_plotfiles.py
+# cp simulation.h5 ../$JOBID-$JOB_NAME.h5
 # cd ..
 # mkdir ../outputs/${JOB_NAME}.${JOBID}
 # cp -t ../outputs/${JOB_NAME}.${JOBID} ./$JOB_NAME.in ./emu.out.0.0 ./emu.his ./plotfiles/simulation.h5
