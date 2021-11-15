@@ -42,7 +42,7 @@ else
         cd ./job_scripts/job
         sed -i -e 's/'"TITLE"'/'"$job"'/' job_$job.$ext
         sed -i -e 's/'"NPROCS"'/'"$num_procs"'/' job_$job.$ext
-        # $submit_command job_$job.$ext
+        $submit_command job_$job.$ext
 
         cd ../..
         }
