@@ -1,11 +1,17 @@
 #!/bin/bash
 
-#SBATCH --job-name=TITLE
-#SBATCH --output=%x-%j.out
+# --- Replace text in [brackets] with the relevant information! ---
+# --- TITLE and NPROCS are automatically replaced by new_job.sh ---
+
+# --- Make sure the name of the Emu executable below matches yours ---
+
+# Slurm options
 #SBATCH --account=[ACCOUNT]
-#SBATCH --mail-type=ALL
 #SBATCH --mail-user=[EMAIL ADDRESS]
-#SBATCH --partition=standard
+#SBATCH --partition=basic
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x-%j.out
+#SBATCH --job-name=TITLE
 #SBATCH --mem=30gb
 
 #SBATCH --ntasks=NPROCS
@@ -15,8 +21,9 @@ echo $SLURM_JOB_NAME
 echo $SLURM_JOB_ID
 
 # Set up output directory in home
-PROJECTDIR=[REPLACE THIS WITH ABSOLUTE PATH TO PROJECT FOLDER]
+PROJECTDIR=[ABSOLUTE PATH TO PROJECT FOLDER WITH TRAILING /]
 
+# Jobs are typically named name.ID - Extract ID by splitting on the period
 JOBID=$(echo $SLURM_JOB_ID | cut -d '.' -f 1)
 JOBDIR=${PROJECTDIR}${SLURM_JOB_NAME}.${JOBID}
 
@@ -32,22 +39,19 @@ cd $JOBDIR
 cp -t . ${PROJECTDIR}base_folder/* -r
 cp -vt . ${PROJECTDIR}inputs/$SLURM_JOB_NAME.in
 
-# Following section may not be necessary in the future!
-cd /xdisk/guven/RH_projects/emu_dev/emu/
-source ./util/puma_config.bsh
+# System-specific setup
+# e.g. for Huff:
+cd ~/real/projects/emu_dev/emu/
+source ./util/huff_config.bsh
 cd $JOBDIR
-
 
 # Run
 date
 mpirun -verbose -np $SLURM_NTASKS ./bin/emu ./$SLURM_JOB_NAME.in
 date
 
-# Example:
-# cd ./plotfiles
-# python ../../emu_to_h5.py
-# cd ..
-# mkdir ../outputs/${SLURM_JOB_NAME}.${JOBID}
-# cp -t ../outputs/${SLURM_JOB_NAME}.${JOBID} ./$SLURM_JOB_NAME.in ./emu.out.0.0 ./emu.his ./plotfiles/simulation.h5
+# Postprocess
+cd ..
+./postprocess.sh ${JOB_NAME}.${JOBID}
 
 exit
