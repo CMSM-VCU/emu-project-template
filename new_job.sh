@@ -5,11 +5,11 @@ scheduler="slurm"
 case $scheduler in
     "slurm")
         ext="slurm"
-        submit_command="sbatch --export=ALL,PROJECTDIR=$PWD"
+        submit_command="sbatch --export=ALL,PROJECTDIR=$PWD --chdir=$PWD/job_scripts/job"
         ;;
     "qsub")
         ext="qsub"
-        submit_command="qsub -v PROJECTDIR=$PWD"
+        submit_command="qsub -v PROJECTDIR=$PWD -wd $PWD/job_scripts/job"
         ;;
     *)
         echo Unkown scheduler $scheduler
@@ -51,12 +51,12 @@ else
         num_procs="$(processors_needed $job)"
 
         yes_or_no "Submit $job ($num_procs processors)?" && {
-        cp job_base.$ext ./job_scripts/job/job_$job.$ext
+        real_script=./job_scripts/job/job_$job.$ext
+        cp job_base.$ext $real_script
 
-        cd ./job_scripts/job
-        sed -i -e 's/'"TITLE"'/'"$job"'/' job_$job.$ext
-        sed -i -e 's/'"NPROCS"'/'"$num_procs"'/' job_$job.$ext
-        $submit_command job_$job.$ext
+        sed -i -e 's/'"TITLE"'/'"$job"'/' $real_script
+        sed -i -e 's/'"NPROCS"'/'"$num_procs"'/' $real_script
+        $submit_command $real_script
 
         cd ../..
         }
