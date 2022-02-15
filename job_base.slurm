@@ -22,7 +22,7 @@ echo $SLURM_JOB_ID
 
 # Jobs are typically named name.ID - Extract ID by splitting on the period
 JOBID=$(echo $SLURM_JOB_ID | cut -d '.' -f 1)
-JOBDIR=${PROJECTDIR}${SLURM_JOB_NAME}.${JOBID}
+JOBDIR=${PROJECTDIR}/${SLURM_JOB_NAME}.${JOBID}
 
 echo $PROJECTDIR
 echo $JOBID
@@ -33,8 +33,8 @@ mkdir $JOBDIR
 # Copy files to working directory
 cd $JOBDIR
 
-cp -t . ${PROJECTDIR}base_folder/* -r
-cp -vt . ${PROJECTDIR}inputs/$SLURM_JOB_NAME.in
+cp -t . ${PROJECTDIR}/base_folder/* -r
+cp -vt . ${PROJECTDIR}/inputs/$SLURM_JOB_NAME.in
 
 # System-specific setup
 # e.g. for Huff:
