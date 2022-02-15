@@ -17,10 +17,6 @@ case $scheduler in
         ;;
 esac
 
-echo $ext
-echo $submit_command
-exit 1
-
 function yes_or_no() {
     while true; do
         read -p "$* [y/n]: " yn
