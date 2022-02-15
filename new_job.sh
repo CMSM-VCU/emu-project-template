@@ -1,7 +1,21 @@
 #!/bin/bash
 # Input file name without extension is first argument
-ext="slurm"
-submit_command="sbatch"
+scheduler="slurm"
+
+case $scheduler in
+    "slurm")
+        ext="slurm"
+        submit_command="sbatch"
+        ;;
+    "qsub")
+        ext="qsub"
+        submit_command="qsub"
+        ;;
+    *)
+        echo Unkown scheduler $scheduler
+        exit 1
+        ;;
+esac
 
 function yes_or_no() {
     while true; do
