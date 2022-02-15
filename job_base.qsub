@@ -16,9 +16,6 @@ echo $JOB_NAME
 echo $JOB_ID
 echo $NSLOTS
 
-# Set up output directory in home
-PROJECTDIR=[ABSOLUTE PATH TO PROJECT FOLDER WITH TRAILING /]
-
 # Jobs are typically named name.ID - Extract ID by splitting on the period
 JOBID=$(echo $JOB_ID | cut -d '.' -f 1)
 JOBDIR=${PROJECTDIR}${JOB_NAME}.${JOBID}

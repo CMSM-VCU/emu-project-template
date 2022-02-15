@@ -20,9 +20,6 @@
 echo $SLURM_JOB_NAME
 echo $SLURM_JOB_ID
 
-# Set up output directory in home
-PROJECTDIR=[ABSOLUTE PATH TO PROJECT FOLDER WITH TRAILING /]
-
 # Jobs are typically named name.ID - Extract ID by splitting on the period
 JOBID=$(echo $SLURM_JOB_ID | cut -d '.' -f 1)
 JOBDIR=${PROJECTDIR}${SLURM_JOB_NAME}.${JOBID}

@@ -5,17 +5,21 @@ scheduler="slurm"
 case $scheduler in
     "slurm")
         ext="slurm"
-        submit_command="sbatch"
+        submit_command="sbatch --export=ALL,PROJECTDIR=$PWD"
         ;;
     "qsub")
         ext="qsub"
-        submit_command="qsub"
+        submit_command="qsub -v PROJECTDIR=$PWD"
         ;;
     *)
         echo Unkown scheduler $scheduler
         exit 1
         ;;
 esac
+
+echo $ext
+echo $submit_command
+exit 1
 
 function yes_or_no() {
     while true; do
