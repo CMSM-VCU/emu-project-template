@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# --- Replace text in [brackets] with the relevant information! ---
+
+# --- Make sure the name of the Emu executable below matches yours ---
+
+# QSUB/SGE options
+#$ -N TITLE
+#$ -cwd
+#$ -j y
+#$ -S /bin/bash
+#$ -pe par1 NPROCS
+
+echo $JOB_NAME
+echo $JOB_ID
+echo $NSLOTS
+
+PREVJOBID=__PREVJOB
+
+# Jobs are typically named name.ID - Extract ID by splitting on the period
+JOBID=$(echo $JOB_ID | cut -d '.' -f 1)
+JOBDIR=${PROJECTDIR}/${JOB_NAME}.${JOBID}
+PREVJOBDIR=${PROJECTDIR}${JOB_NAME}.${PREVJOBID}
+
+echo $PROJECTDIR
+echo $JOBID
+echo $JOBDIR
+
+mkdir $JOBDIR
+
+# Copy files to working directory
+cd $JOBDIR
+
+cp -t . ${PROJECTDIR}/base_folder/* -r
+cp -vt . ${PROJECTDIR}/inputs/$JOB_NAME.in
+
+cp -t . ${PREVJOBDIR}/plotfiles/ -r
+cp -t . ${PREVJOBDIR}/restart/ -r
+cp ./restart/misc/emu.his.$__TIMESTEP ./emu.his
+
+# Add the `restart_read` keyword to the input file
+echo -e "\nrestart_read\n  __TIMESTEP"'/' >> $SLURM_JOB_NAME.in
+
+# System-specific setup
+# e.g. for Stewart:
+source /opt/intel/oneapi/setvars.sh
+
+# Run
+date
+mpirun -verbose -np $NSLOTS ./bin/emu ./$JOB_NAME.in
+date
+
+# Postprocess
+cd ..
+./postprocess.sh ${JOB_NAME}.${JOBID}
+
+exit
