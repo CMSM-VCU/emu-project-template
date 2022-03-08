@@ -58,8 +58,8 @@ else
     sed -i -e 's/'"TITLE"'/'"$job"'/' restart_$job.$ext
     sed -i -e 's/'"__TIMESTEP"'/'"$timestep"'/' restart_$job.$ext
     sed -i -e 's/'"__PREVJOB"'/'"$prevjob"'/' restart_$job.$ext
-    sed -i -e 's/'"NPROCS"'/'"$num_procs"'/' job_$job.$ext
-    $submit_command job_$job.$ext
+    sed -i -e 's/'"NPROCS"'/'"$num_procs"'/' restart_$job.$ext
+    $submit_command restart_$job.$ext
 
     cd ../..
     }
