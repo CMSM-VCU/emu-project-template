@@ -39,7 +39,7 @@ cp -t . ${PREVJOBDIR}/restart/ -r
 cp ./restart/misc/emu.his.$__TIMESTEP ./emu.his
 
 # Add the `restart_read` keyword to the input file
-echo -e "\nrestart_read\n  __TIMESTEP"'/' >> $SLURM_JOB_NAME.in
+echo -e "\nrestart_read\n  __TIMESTEP" >> $SLURM_JOB_NAME.in
 
 # System-specific setup
 # e.g. for Stewart:
