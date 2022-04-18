@@ -58,6 +58,6 @@ date
 
 # Postprocess
 cd ..
-./postprocess.sh ${JOB_NAME}.${JOBID}
+./postprocess.sh ${SLURM_JOB_NAME}.${JOBID}
 
 exit
